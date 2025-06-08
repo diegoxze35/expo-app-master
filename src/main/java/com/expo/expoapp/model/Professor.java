@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Profesor extends Persona {
+public class Professor extends ExpoUser {
 }

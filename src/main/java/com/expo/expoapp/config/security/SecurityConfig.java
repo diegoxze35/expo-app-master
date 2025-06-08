@@ -1,5 +1,6 @@
 package com.expo.expoapp.config.security;
 
+import com.expo.expoapp.config.jwt.JwtValidationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class ConfiguracionSeguridad {
+public class SecurityConfig {
 
 	private final AuthenticationConfiguration authenticationConfiguration;
 
 	@Autowired
-	public ConfiguracionSeguridad(AuthenticationConfiguration authenticationConfiguration) {
+	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
 		this.authenticationConfiguration = authenticationConfiguration;
 	}
 
@@ -37,8 +38,8 @@ public class ConfiguracionSeguridad {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests(
 						(auth) ->
-								auth.requestMatchers(HttpMethod.GET, "/api/usuarios").permitAll()
-										.requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+								auth.requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+										.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
 										.anyRequest()
 										.authenticated()
 				)
@@ -46,7 +47,8 @@ public class ConfiguracionSeguridad {
 				.sessionManagement(s ->
 						s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
-				.addFilter(new JwtFiltroAutenticador(authenticationManager()))
+				.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+				.addFilter(new JwtValidationFilter(authenticationManager()))
 				.build();
 	}
 

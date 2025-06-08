@@ -5,26 +5,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Lob;
-import jakarta.persistence.MappedSuperclass;
+//import jakarta.persistence.Lob;
 import lombok.Data;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
-public abstract class Persona {
+public abstract class ExpoUser {
 	@Id
 	@Column(length = 10, nullable = false, unique = true)
-	private String matricula;
+	private String matriculate;
 	@Column(length = 50, nullable = false, unique = true)
 	private String email;
 	@Column(nullable = false)
 	private String password;
 	@Column(length = 25, nullable = false)
-	private String nombre;
+	private String name;
 	@Column(length = 25, nullable = false)
-	private String apellido;
-	@Column(nullable = false)
+	private String surname;
+	/*@Column(nullable = false)
 	@Lob
-	private byte[] foto;
+	private byte[] profilePhoto;*/
 }

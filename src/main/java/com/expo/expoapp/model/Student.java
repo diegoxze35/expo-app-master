@@ -17,14 +17,14 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Estudiante extends Persona {
+public class Student extends ExpoUser {
 	@Column(length = 5, nullable = false)
-	private String grupo;
-	private Integer semestre;
+	private String groupNumber;
+	private Integer semester;
 	@Enumerated(EnumType.STRING)
-	private Carrera carrera;
+	private Career career;
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "equipo_id")
-	@JsonIgnoreProperties("integrantes")
-	private Equipo equipo;
+	@JoinColumn(name = "team_id")
+	@JsonIgnoreProperties("members")
+	private Team team;
 }

@@ -1,7 +1,7 @@
 package com.expo.expoapp.config.security;
 
 import com.expo.expoapp.config.jwt.JWT;
-import com.expo.expoapp.request.LoginSolicitud;
+import com.expo.expoapp.request.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,12 +21,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-public class JwtFiltroAutenticador extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
 	private final ObjectMapper objectMapper;
 
-	public JwtFiltroAutenticador(AuthenticationManager authenticationManager) {
+	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 		this.objectMapper = new ObjectMapper();
 	}
@@ -34,16 +34,16 @@ public class JwtFiltroAutenticador extends UsernamePasswordAuthenticationFilter 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		LoginSolicitud solicitud;
+		LoginRequest loginRequest;
 		try {
-			solicitud = objectMapper.readValue(request.getInputStream(), LoginSolicitud.class);
+			loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 		} catch (Exception e) {
-			throw new RuntimeException("Error al leer los datos de autenticación", e);
+			throw new RuntimeException("Failed to get authentication data", e);
 		}
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				solicitud.matricula(),
-				solicitud.contrasenia()
+				loginRequest.matriculate(),
+				loginRequest.password()
 		);
 
 		return authenticationManager.authenticate(authenticationToken);
@@ -54,30 +54,29 @@ public class JwtFiltroAutenticador extends UsernamePasswordAuthenticationFilter 
 			HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult
 	) throws IOException {
 
-		User usuario = (User) authResult.getPrincipal();
-		String nombreUsuario = usuario.getUsername();
-		Collection<? extends GrantedAuthority> roles = usuario.getAuthorities();
+		User user = (User) authResult.getPrincipal();
+		String username = user.getUsername();
+		Collection<? extends GrantedAuthority> roles = user.getAuthorities();
 
 		Claims claims = Jwts
 				.claims()
-				.add("roles", roles)
-				.add("mat", usuario.getUsername())
+				.add("roles", objectMapper.writeValueAsString(roles))
 				.build();
 
 		String token = Jwts
 				.builder()
-				.subject(nombreUsuario)
-				.expiration(new Date(System.currentTimeMillis() + 72_000_00)) //2 horas
+				.subject(username)
+				.expiration(new Date(System.currentTimeMillis() + 72_000_00)) //2 hours
 				.issuedAt(new Date())
 				.claims(claims)
-				.signWith(JWT.LLAVE_SECRETA)
+				.signWith(JWT.SECRET_KEY)
 				.compact();
 
 		response.addHeader(JWT.AUTH_HEADER, JWT.BEARER_TOKEN + token);
-		Map<String, String> cuerpo = new HashMap<>();
-		cuerpo.put("token", token);
+		Map<String, String> body = new HashMap<>();
+		body.put("token", token);
 
-		response.getWriter().write(objectMapper.writeValueAsString(cuerpo));
+		response.getWriter().write(objectMapper.writeValueAsString(body));
 		response.setContentType(JWT.CONTENT_TYPE);
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
@@ -85,9 +84,9 @@ public class JwtFiltroAutenticador extends UsernamePasswordAuthenticationFilter 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 	                                          AuthenticationException failed) throws IOException {
-		Map<String, String> cuerpo = new HashMap<>();
-		cuerpo.put("error", failed.getMessage());
-		response.getWriter().write(objectMapper.writeValueAsString(cuerpo));
+		Map<String, String> body = new HashMap<>();
+		body.put("error", failed.getMessage());
+		response.getWriter().write(objectMapper.writeValueAsString(body));
 		response.setContentType(JWT.CONTENT_TYPE);
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	}

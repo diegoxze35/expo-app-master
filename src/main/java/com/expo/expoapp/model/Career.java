@@ -1,6 +1,6 @@
 package com.expo.expoapp.model;
 
-public enum Carrera {
+public enum Career {
     ISC,
     IIA,
     LCD

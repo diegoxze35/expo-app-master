@@ -1,6 +1,5 @@
 package com.expo.expoapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,17 +15,16 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode
-public class Equipo {
+public class Team {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idEquipo;
+	private Long teamId;
 
 	@Column(unique = true, length = 30, nullable = false)
-	private String nombreEquipo;
+	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "equipo")
-	@JsonIncludeProperties("equipo")
-	private List<Estudiante> integrantes;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "team")
+	private List<Student> members;
 
 }
