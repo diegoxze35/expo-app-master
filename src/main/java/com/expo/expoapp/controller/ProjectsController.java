@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/projects")
 public class ProjectsController {
 
+	/*
 	private final ProjectRepository projectRepository;
 	private final ProjectService projectService;
 
@@ -57,4 +58,6 @@ public class ProjectsController {
 	public void deleteById(@PathVariable Long id) {
 		projectRepository.deleteById(id);
 	}
+	*/
+
 }

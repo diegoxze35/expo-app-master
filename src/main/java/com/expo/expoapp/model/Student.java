@@ -1,6 +1,5 @@
 package com.expo.expoapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +22,7 @@ public class Student extends ExpoUser {
 	private Integer semester;
 	@Enumerated(EnumType.STRING)
 	private Career career;
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "team_id")
-	@JsonIgnoreProperties("members")
 	private Team team;
 }

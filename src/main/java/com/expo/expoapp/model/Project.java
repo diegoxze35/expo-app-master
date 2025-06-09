@@ -1,6 +1,5 @@
 package com.expo.expoapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,9 +10,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode
 public class Project {
 
     @Id
@@ -28,6 +29,5 @@ public class Project {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "team_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Team team;
 }

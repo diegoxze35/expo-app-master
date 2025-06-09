@@ -2,7 +2,9 @@ package com.expo.expoapp.controller;
 
 import com.expo.expoapp.model.Team;
 import com.expo.expoapp.repository.TeamRepository;
+import com.expo.expoapp.service.TeamService;
 import java.util.List;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,35 +18,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    private final TeamRepository repository;
+    /*private final TeamService service;
 
-    public TeamController(TeamRepository repository) {
-        this.repository = repository;
+    public TeamController(TeamService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<Team> findAll() {
-        return repository.findAll();
+        return service.findAll();
     }
 
     @PostMapping
-    public Team save(@RequestBody Team team) {
-        return repository.save(team);
+    public Team save(@RequestBody Team team, @AuthenticationPrincipal String matriculate) {
+        return service.save(team);
     }
 
     @GetMapping("/{id}")
     public Team getById(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+        return service.findById(id).orElse(null);
     }
 
     @PutMapping("/{id}")
     public Team updateById(@PathVariable Long id, @RequestBody Team team) {
         team.setTeamId(id);
-        return repository.save(team);
+        return service.save(team);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        repository.deleteById(id);
-    }
+        service.deleteById(id);
+    }*/
 }

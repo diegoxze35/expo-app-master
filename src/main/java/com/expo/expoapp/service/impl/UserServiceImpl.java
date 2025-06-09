@@ -1,6 +1,7 @@
 package com.expo.expoapp.service.impl;
 
-import com.expo.expoapp.model.ExpoUser;
+import com.expo.expoapp.mapper.ExpoUserMapper;
+import com.expo.expoapp.dto.ExpoUserDTO;
 import com.expo.expoapp.model.Professor;
 import com.expo.expoapp.model.Student;
 import com.expo.expoapp.model.Team;
@@ -34,12 +35,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<ExpoUser> findAll() {
-		return userRepository.findAll();
+	public List<ExpoUserDTO> findAll() {
+		return userRepository.findAll().stream().map(ExpoUserMapper::toDTO).toList();
 	}
 
 	@Override
-	public ExpoUser save(UserRequest user/*, MultipartFile profilePhoto*/) /*throws IOException*/ {
+	public ExpoUserDTO save(UserRequest user/*, MultipartFile profilePhoto*/) /*throws IOException*/ {
 		//Diego Alejandro Moreno Martinez
 		String[] fullName = user.name().split(" ");
 		String name, surname;
@@ -68,13 +69,13 @@ public class UserServiceImpl implements UserService {
 					if (team.isPresent()) {
 						newStudent.setTeam(team.get());
 					} else {
-						Team teamNuevo = new Team();
-						teamNuevo.setName(user.teamName());
-						Team e = teamRepository.save(teamNuevo);
+						Team newTeam = new Team();
+						newTeam.setName(user.teamName());
+						Team e = teamRepository.save(newTeam);
 						newStudent.setTeam(e);
 					}
 				}
-				return userRepository.save(newStudent);
+				return ExpoUserMapper.toDTO(userRepository.save(newStudent));
 			case Professor:
 				Professor newProfessor = new Professor();
 				newProfessor.setMatriculate(user.matriculate());
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
 				newProfessor.setName(name);
 				newProfessor.setSurname(surname);
 				//newProfessor.setProfilePhoto(profilePhoto.getBytes());
-				return userRepository.save(newProfessor);
+				return ExpoUserMapper.toDTO(userRepository.save(newProfessor));
 		}
 		return null;
 	}

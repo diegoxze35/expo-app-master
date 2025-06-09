@@ -1,4 +1,4 @@
-package com.expo.expoapp.service;
+package com.expo.expoapp.service.impl;
 
 import com.expo.expoapp.model.ExpoUser;
 import com.expo.expoapp.model.Professor;

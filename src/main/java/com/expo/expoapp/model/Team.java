@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -24,7 +25,8 @@ public class Team {
 	@Column(unique = true, length = 30, nullable = false)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "team")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "team")
+	@ToString.Exclude
 	private List<Student> members;
 
 }

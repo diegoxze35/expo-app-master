@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-//import jakarta.persistence.Lob;
 import lombok.Data;
 
 @Entity
@@ -23,7 +22,4 @@ public abstract class ExpoUser {
 	private String name;
 	@Column(length = 25, nullable = false)
 	private String surname;
-	/*@Column(nullable = false)
-	@Lob
-	private byte[] profilePhoto;*/
 }

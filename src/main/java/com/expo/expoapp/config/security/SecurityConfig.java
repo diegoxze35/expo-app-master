@@ -40,6 +40,7 @@ public class SecurityConfig {
 						(auth) ->
 								auth.requestMatchers(HttpMethod.GET, "/api/users").permitAll()
 										.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+										.requestMatchers("/api/teams").hasRole("STUDENT")
 										.anyRequest()
 										.authenticated()
 				)
