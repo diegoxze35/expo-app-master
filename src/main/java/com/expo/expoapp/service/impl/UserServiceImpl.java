@@ -109,11 +109,11 @@ public class UserServiceImpl implements UserService {
 			case Professor -> {
 				Professor newProfessor = new Professor();
 				newProfessor.setMatriculate(user.matriculate());
+				newProfessor.setName(nameAndSurname.get(0));
+				newProfessor.setSurname(nameAndSurname.get(1));
 				fillNullableFields(newProfessor, user, fileUrl);
 				/*newProfessor.setEmail(user.email());
 				newProfessor.setPassword(encoder.encode(user.password()));
-				newProfessor.setName(nameAndSurname.get(0));
-				newProfessor.setSurname(nameAndSurname.get(1));
 				newProfessor.setPhotoUrl(fileUrl);*/
 				ExpoUser s = userRepository.save(newProfessor);
 				yield NewUserMapper.toDTO(s, null);
