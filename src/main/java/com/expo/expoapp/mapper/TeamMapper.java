@@ -6,6 +6,7 @@ import com.expo.expoapp.model.Student;
 import com.expo.expoapp.model.Team;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class TeamMapper {
 	public static TeamDTO toDTO(Team team) {
@@ -17,7 +18,7 @@ public class TeamMapper {
 		return dto;
 	}
 
-	private static List<TeamMemberDTO> mapMembers(List<Student> members) {
+	public static List<TeamMemberDTO> mapMembers(Set<Student> members) {
 		if (members == null) return Collections.emptyList();
 
 		return members.stream()
@@ -29,6 +30,7 @@ public class TeamMapper {
 		TeamMemberDTO dto = new TeamMemberDTO();
 		dto.setMatriculate(student.getMatriculate());
 		dto.setFullName(student.getName() + " " + student.getSurname());
+		dto.setIsLeader(student.getIsLeader());
 		return dto;
 	}
 }

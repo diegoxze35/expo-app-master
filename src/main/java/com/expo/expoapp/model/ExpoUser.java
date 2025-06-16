@@ -14,12 +14,14 @@ public abstract class ExpoUser {
 	@Id
 	@Column(length = 10, nullable = false, unique = true)
 	private String matriculate;
-	@Column(length = 50, nullable = false, unique = true)
+	@Column(length = 50, unique = true)
 	private String email;
-	@Column(nullable = false)
+	@Column()
 	private String password;
 	@Column(length = 25, nullable = false)
 	private String name;
 	@Column(length = 25, nullable = false)
 	private String surname;
+	@Column()
+	private String photoUrl;
 }

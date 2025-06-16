@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		}
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				loginRequest.matriculate(),
+				loginRequest.email(),
 				loginRequest.password()
 		);
 
@@ -75,6 +75,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.addHeader(JWT.AUTH_HEADER, JWT.BEARER_TOKEN + token);
 		Map<String, String> body = new HashMap<>();
 		body.put("token", token);
+		body.put("userType", roles.toArray()[0].toString());
 
 		response.getWriter().write(objectMapper.writeValueAsString(body));
 		response.setContentType(JWT.CONTENT_TYPE);

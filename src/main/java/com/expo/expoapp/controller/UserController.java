@@ -1,19 +1,20 @@
 package com.expo.expoapp.controller;
 
-import com.expo.expoapp.dto.ExpoUserDTO;
+import com.expo.expoapp.dto.NewUserDTO;
 import com.expo.expoapp.request.UserRequest;
 import com.expo.expoapp.service.UserService;
-import java.util.List;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -24,15 +25,13 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping
-	public ResponseEntity<List<ExpoUserDTO>> findALl() {
-		return ResponseEntity.ok(userService.findAll());
-	}
-
-	@PostMapping
-	public ResponseEntity<ExpoUserDTO> save(@RequestBody UserRequest userRequest) {
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<NewUserDTO> save(
+			@RequestPart("userRequest") UserRequest userRequest,
+			@RequestPart("profilePhoto") MultipartFile profilePhoto
+	) throws IOException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(
-				this.userService.save(userRequest/*, profilePhoto*/)
+				userService.save(userRequest, profilePhoto)
 		);
 	}
 

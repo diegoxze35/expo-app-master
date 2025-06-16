@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional(readOnly = true)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<ExpoUser> userOptional = userRepository.findById(username);
+		Optional<ExpoUser> userOptional = userRepository.findByEmail(username);
 		if (userOptional.isEmpty()) throw new UsernameNotFoundException("User not found");
 		ExpoUser expoUser = userOptional.get();
 		List<GrantedAuthority> roles = new ArrayList<>(1);
@@ -38,6 +39,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		else if (expoUser instanceof Professor)
 			roles.add(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
 		else throw new UsernameNotFoundException("Unknown User");
-		return new org.springframework.security.core.userdetails.User(expoUser.getMatriculate(), expoUser.getPassword(), roles);
+		return new User(expoUser.getMatriculate(), expoUser.getPassword(), roles);
 	}
 }

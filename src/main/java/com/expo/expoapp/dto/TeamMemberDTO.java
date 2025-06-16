@@ -6,4 +6,5 @@ import lombok.Data;
 public class TeamMemberDTO {
     private String matriculate;
     private String fullName;
+    private Boolean isLeader;
 }

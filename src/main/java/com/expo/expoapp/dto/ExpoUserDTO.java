@@ -7,4 +7,5 @@ public abstract class ExpoUserDTO {
     private String matriculate;
     private String email;
     private String fullName;
+    private String photoUrl;
 }

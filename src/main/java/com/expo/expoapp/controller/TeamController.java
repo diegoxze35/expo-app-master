@@ -30,7 +30,7 @@ public class TeamController {
     }
 
     @PostMapping
-    public Team save(@RequestBody Team team, @AuthenticationPrincipal String matriculate) {
+    public Team save(@RequestBody Team team, @AuthenticationPrincipal String email) {
         return service.save(team);
     }
 

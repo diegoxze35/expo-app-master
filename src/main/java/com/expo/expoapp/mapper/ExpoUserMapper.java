@@ -32,10 +32,11 @@ public class ExpoUserMapper {
 		return dto;
 	}
 
-	protected static void mapBaseProperties(ExpoUser source, ExpoUserDTO target) {
+	private static void mapBaseProperties(ExpoUser source, ExpoUserDTO target) {
 		target.setMatriculate(source.getMatriculate());
 		target.setEmail(source.getEmail());
 		target.setFullName(source.getName() + " " + source.getSurname());
+		target.setPhotoUrl(source.getPhotoUrl());
 	}
 
 }

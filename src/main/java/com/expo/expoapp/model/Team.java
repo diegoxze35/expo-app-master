@@ -8,7 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.util.List;
+import jakarta.persistence.OneToOne;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,8 +26,14 @@ public class Team {
 	@Column(unique = true, length = 30, nullable = false)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "team")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@ToString.Exclude
-	private List<Student> members;
+	@EqualsAndHashCode.Exclude
+	private Set<Student> members;
+
+	@OneToOne(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	private Project project;
 
 }

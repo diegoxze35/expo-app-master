@@ -48,8 +48,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 		}
 		String token = header.replace(JWT.BEARER_TOKEN, "");
 		try {
-			Claims claims = Jwts.
-					parser()
+			Claims claims = Jwts.parser()
 					.verifyWith(JWT.SECRET_KEY)
 					.build()
 					.parseSignedClaims(token)
