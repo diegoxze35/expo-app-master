@@ -51,6 +51,7 @@ public class SecurityConfig {
 										.requestMatchers("/api/projects").hasRole("STUDENT")
 										.requestMatchers("/api/projects/professors").hasRole("STUDENT")
 										.requestMatchers("/api/professors").hasRole("PROFESSOR")
+										.requestMatchers("/uploads/images/**").permitAll()
 										.anyRequest()
 										.authenticated()
 				)

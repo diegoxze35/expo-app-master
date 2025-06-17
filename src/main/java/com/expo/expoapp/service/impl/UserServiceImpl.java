@@ -72,7 +72,10 @@ public class UserServiceImpl implements UserService {
 		if (u.isPresent()) {
 			ExpoUser expoUser = u.get();
 			fillNullableFields(expoUser, user, fileUrl);
-			return NewUserMapper.toDTO(userRepository.save(expoUser), user.teamName());
+			String teamName = null;
+			if (expoUser instanceof Student student)
+				teamName = student.getTeam().getName();
+			return NewUserMapper.toDTO(userRepository.save(expoUser), teamName);
 		}
 		/*Check for new user is already in the database*/
 		List<String> nameAndSurname = Utils.parseNameAndSurname(user.name());
@@ -84,12 +87,6 @@ public class UserServiceImpl implements UserService {
 				newStudent.setName(nameAndSurname.get(0));
 				newStudent.setSurname(nameAndSurname.get(1));
 				fillNullableFields(newStudent, user, fileUrl);
-				/*newStudent.setEmail(user.email());
-				newStudent.setPassword(encoder.encode(user.password()));
-				newStudent.setGroupNumber(user.group());
-				newStudent.setSemester(user.semester());
-				newStudent.setCareer(user.career());
-				newStudent.setPhotoUrl(fileUrl);*/
 				if (user.teamName() != null) {
 					Optional<Team> team = teamRepository.findByName(user.teamName());
 					if (team.isPresent()) {
@@ -112,9 +109,6 @@ public class UserServiceImpl implements UserService {
 				newProfessor.setName(nameAndSurname.get(0));
 				newProfessor.setSurname(nameAndSurname.get(1));
 				fillNullableFields(newProfessor, user, fileUrl);
-				/*newProfessor.setEmail(user.email());
-				newProfessor.setPassword(encoder.encode(user.password()));
-				newProfessor.setPhotoUrl(fileUrl);*/
 				ExpoUser s = userRepository.save(newProfessor);
 				yield NewUserMapper.toDTO(s, null);
 			}
