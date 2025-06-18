@@ -5,6 +5,7 @@ import com.expo.expoapp.dto.ProjectResponse;
 import com.expo.expoapp.request.ProjectRequest;
 import com.expo.expoapp.service.ProjectService;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,11 @@ public class ProjectController {
 	@Autowired
 	public ProjectController(ProjectService projectService) {
 		this.projectService = projectService;
+	}
+
+	@GetMapping
+	public ResponseEntity<List<ProjectResponse>> getProjectsByUserId(@AuthenticationPrincipal String userId) {
+		return ResponseEntity.ok(projectService.getProjectsByUserId(userId));
 	}
 
 	@PostMapping

@@ -26,6 +26,8 @@ public class UploadProjectInterceptor implements HandlerInterceptor {
 	@Override
 	@Transactional(readOnly = true)
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		if (!request.getMethod().equals("POST"))
+			return true;
 		String currentUserId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Student currentUser = (Student) userRepository.findById(currentUserId).orElseThrow();
 		Project currentProject = currentUser.getTeam().getProject();
@@ -34,7 +36,7 @@ public class UploadProjectInterceptor implements HandlerInterceptor {
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		ObjectMapper mapper = new ObjectMapper();
-		response.getWriter().write(mapper.writeValueAsString(ProjectMapper.toDTO(currentProject)));
+		response.getWriter().write(mapper.writeValueAsString(ProjectMapper.toDTO(currentProject, false)));
 		return false;
 	}
 }

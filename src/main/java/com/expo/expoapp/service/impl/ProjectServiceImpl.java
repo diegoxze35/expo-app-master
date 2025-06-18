@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,21 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectServiceImpl(UserRepository userRepository, TeamRepository teamRepository) {
 		this.userRepository = userRepository;
 		this.teamRepository = teamRepository;
+	}
+
+	@Override
+	public List<ProjectResponse> getProjectsByUserId(String userId) {
+		ExpoUser user = userRepository.findById(userId).orElseThrow();
+		if (user instanceof Student s) {
+			Team t = s.getTeam();
+			Project p;
+			return t != null ?
+					(p = t.getProject()) != null ?
+							List.of(ProjectMapper.toDTO(p, false)) :
+							Collections.emptyList() : Collections.emptyList();
+		}
+		Professor p = (Professor) user;
+		return p.getProjects().stream().map(pr -> ProjectMapper.toDTO(pr, true)).toList();
 	}
 
 	@Override
@@ -96,7 +112,7 @@ public class ProjectServiceImpl implements ProjectService {
 		InputStream inputStream = document.getInputStream();
 		Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 		inputStream.close();
-		return ProjectMapper.toDTO(savedProject);
+		return ProjectMapper.toDTO(savedProject, true);
 	}
 
 	@Override

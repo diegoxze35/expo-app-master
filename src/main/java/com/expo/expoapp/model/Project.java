@@ -26,7 +26,7 @@ public class Project {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID projectId;
 
-	@Column(length = 50, nullable = false)
+	@Column(length = 100, nullable = false)
 	private String title;
 
 	@Column(length = 300, nullable = false)
@@ -42,6 +42,9 @@ public class Project {
 
 	@Column(nullable = false)
 	private String lesson;
+
+	@Column(length = 300)
+	private String comment;
 
 	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "professor_id", nullable = false)

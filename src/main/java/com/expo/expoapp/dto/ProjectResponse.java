@@ -1,6 +1,7 @@
 package com.expo.expoapp.dto;
 
 import com.expo.expoapp.model.ProjectType;
+import com.expo.expoapp.model.State;
 import java.util.List;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class ProjectResponse {
 	private String zone;
 	private ProjectType projectType;
 	private String lesson;
+	private State state;
 	private ProfessorDTO professor;
 	private String description;
 	private List<TeamMemberDTO> members;

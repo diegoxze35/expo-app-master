@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public abstract class ExpoUser {
 	@Id
-	@Column(length = 10, nullable = false, unique = true)
+	@Column(length = 10, nullable = false)
 	private String matriculate;
 	@Column(length = 50, unique = true)
 	private String email;
