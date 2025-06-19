@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,5 +19,9 @@ public class CriterionId implements Serializable {
 
     @Column(name = "professor_id")
     private String professorId;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, insertable = false, updatable = false)
+    private Long id;
 
 }

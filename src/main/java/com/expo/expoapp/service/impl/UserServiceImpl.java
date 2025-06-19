@@ -133,7 +133,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public ExpoUserDTO findById(String id) {
-		return ExpoUserMapper.toDTO(userRepository.findById(id).orElseThrow());
+		return ExpoUserMapper.toDTO(
+				userRepository.findById(id).orElseThrow(),
+				true
+		);
 	}
 
 }

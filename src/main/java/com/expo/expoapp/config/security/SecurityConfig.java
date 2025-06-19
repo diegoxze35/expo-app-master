@@ -46,9 +46,9 @@ public class SecurityConfig {
 		return http.authorizeHttpRequests(
 						(auth) ->
 								auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-										//.requestMatchers("/api/teams").hasRole("STUDENT")
 										.requestMatchers("/api/students").hasRole("STUDENT")
 										.requestMatchers(HttpMethod.GET, "/api/projects").hasAnyRole("STUDENT", "PROFESSOR")
+										.requestMatchers(HttpMethod.GET, "/api/projects/{id}").permitAll()
 										.requestMatchers(HttpMethod.POST, "/api/projects").hasRole("STUDENT")
 										.requestMatchers("/api/projects/professors").hasRole("STUDENT")
 										.requestMatchers("/api/professors").hasRole("PROFESSOR")

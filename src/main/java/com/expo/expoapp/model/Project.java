@@ -46,6 +46,12 @@ public class Project {
 	@Column(length = 300)
 	private String comment;
 
+	@Column(length = 300)
+	private String originalFileName;
+
+	@Column()
+	private Double evaluation;
+
 	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "professor_id", nullable = false)
 	@ToString.Exclude

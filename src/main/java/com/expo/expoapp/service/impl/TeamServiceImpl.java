@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -25,11 +26,13 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<TeamDTO> findAll() {
 		return teamRepository.findAll().stream().map(TeamMapper::toDTO).toList();
 	}
 
 	@Override
+	@Transactional
 	public TeamDTO save(String teamName, String matriculate) {
 		Optional<Student> s = studentRepository.findById(matriculate);
 		if (s.isEmpty()) {

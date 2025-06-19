@@ -2,7 +2,7 @@ package com.expo.expoapp.service.impl;
 
 import com.expo.expoapp.dto.NewMemberDTO;
 import com.expo.expoapp.dto.ProfessorDTO;
-import com.expo.expoapp.dto.ProjectResponse;
+import com.expo.expoapp.dto.ProjectDTO;
 import com.expo.expoapp.mapper.ExpoUserMapper;
 import com.expo.expoapp.mapper.ProjectMapper;
 import com.expo.expoapp.model.ExpoUser;
@@ -11,6 +11,7 @@ import com.expo.expoapp.model.Project;
 import com.expo.expoapp.model.State;
 import com.expo.expoapp.model.Student;
 import com.expo.expoapp.model.Team;
+import com.expo.expoapp.repository.ProjectRepository;
 import com.expo.expoapp.repository.TeamRepository;
 import com.expo.expoapp.repository.UserRepository;
 import com.expo.expoapp.request.ProjectRequest;
@@ -43,15 +44,17 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private final UserRepository userRepository;
 	private final TeamRepository teamRepository;
+	private final ProjectRepository projectRepository;
 
 	@Autowired
-	public ProjectServiceImpl(UserRepository userRepository, TeamRepository teamRepository) {
+	public ProjectServiceImpl(UserRepository userRepository, TeamRepository teamRepository, ProjectRepository projectRepository) {
 		this.userRepository = userRepository;
 		this.teamRepository = teamRepository;
+		this.projectRepository = projectRepository;
 	}
 
 	@Override
-	public List<ProjectResponse> getProjectsByUserId(String userId) {
+	public List<ProjectDTO> getProjectsByUserId(String userId) {
 		ExpoUser user = userRepository.findById(userId).orElseThrow();
 		if (user instanceof Student s) {
 			Team t = s.getTeam();
@@ -67,7 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	@Transactional
-	public ProjectResponse save(String leaderId, ProjectRequest projectRequest, MultipartFile document) throws IOException {
+	public ProjectDTO save(String leaderId, ProjectRequest projectRequest, MultipartFile document) throws IOException {
 		Student leader = (Student) userRepository.findById(leaderId).orElseThrow();
 		Team currentTeam = leader.getTeam();
 		Set<Student> currentMembers = currentTeam.getMembers();
@@ -95,6 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
 		newProject.setState(State.Pending);
 		newProject.setType(projectRequest.projectType());
 		newProject.setLesson(projectRequest.lesson());
+		newProject.setOriginalFileName(document.getOriginalFilename());
 		Professor professor = (Professor) userRepository.findById(projectRequest.professorId()).orElseThrow();
 		Set<Project> professorsProjects = professor.getProjects();
 		professorsProjects.add(newProject);
@@ -108,7 +112,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Path uploadPath = Paths.get(uploadDir + "/docs");
 		if (!Files.exists(uploadPath))
 			Files.createDirectories(uploadPath);
-		Path filePath = uploadPath.resolve(projectId.toString());
+		Path filePath = uploadPath.resolve(projectId.toString() + "_" + document.getOriginalFilename());
 		InputStream inputStream = document.getInputStream();
 		Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 		inputStream.close();
@@ -120,8 +124,18 @@ public class ProjectServiceImpl implements ProjectService {
 	public Set<ProfessorDTO> getAvailableProfessors() {
 		return userRepository.findByIsAvailable()
 				.stream()
-				.map(u -> (ProfessorDTO) ExpoUserMapper.toDTO(u))
+				.map(u -> (ProfessorDTO) ExpoUserMapper.toDTO(u, false))
 				.collect(Collectors.toSet());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public byte[] getDocument(String projectId) throws IOException {
+		Path uploadPath = Paths.get(uploadDir + "/docs");
+		Project project = projectRepository.findById(UUID.fromString(projectId)).orElseThrow();
+		return Files.readAllBytes(
+				uploadPath.resolve(projectId + "_" + project.getOriginalFileName())
+		);
 	}
 
 }

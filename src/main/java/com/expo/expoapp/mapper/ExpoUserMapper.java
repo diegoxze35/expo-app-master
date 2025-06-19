@@ -8,11 +8,11 @@ import com.expo.expoapp.model.Professor;
 import com.expo.expoapp.model.Student;
 
 public class ExpoUserMapper {
-	public static ExpoUserDTO toDTO(ExpoUser expoUser) {
+	public static ExpoUserDTO toDTO(ExpoUser expoUser, final boolean withProjects) {
 		if (expoUser instanceof Student) {
 			return mapStudentToDto((Student) expoUser);
 		} else {
-			return mapProfessorToDto((Professor) expoUser);
+			return mapProfessorToDto((Professor) expoUser, withProjects);
 		}
 	}
 
@@ -26,9 +26,17 @@ public class ExpoUserMapper {
 		return dto;
 	}
 
-	private static ProfessorDTO mapProfessorToDto(Professor professor) {
+	private static ProfessorDTO mapProfessorToDto(Professor professor, final boolean withProjects) {
 		ProfessorDTO dto = new ProfessorDTO();
 		mapBaseProperties(professor, dto);
+		if (withProjects) {
+			dto.setProjects(
+					professor.getProjects()
+							.stream()
+							.map(p -> ProjectMapper.toDTO(p, true))
+							.toList()
+			);
+		}
 		return dto;
 	}
 
